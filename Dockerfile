@@ -10,7 +10,7 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     API_HOST=0.0.0.0 \
-    API_PORT=8000
+    API_PORT=8080
 
 WORKDIR /app
 
@@ -38,13 +38,13 @@ COPY data ./data
 RUN mkdir -p /app/data/resume /app/data/chroma /app/data/bm25
 
 
-EXPOSE 8000
+EXPOSE 8080
 
 # Health probe hits the FastAPI /health endpoint.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD python -c "import os,urllib.request,sys; \
-url='http://127.0.0.1:%s/health' % os.environ.get('API_PORT','8000'); \
+url='http://127.0.0.1:%s/health' % os.environ.get('PORT', os.environ.get('API_PORT','8080')); \
 sys.exit(0 if urllib.request.urlopen(url, timeout=4).status == 200 else 1)" || exit 1
 
 # Bind host/port from env so the same image works locally and in compose.
-CMD ["sh", "-c", "uvicorn app.main:app --host ${API_HOST:-0.0.0.0} --port ${API_PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn app.main:app --host ${API_HOST:-0.0.0.0} --port ${PORT:-${API_PORT:-8080}}"]
