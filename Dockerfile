@@ -35,7 +35,7 @@ COPY pyproject.toml README.md ./
 # --- Persisted data (vector store / bm25 / sqlite) ----------------------------
 # Mount a volume here in docker-compose to keep the corpus across restarts.
 RUN mkdir -p /app/data/resume /app/data/chroma /app/data/bm25
-VOLUME ["/app/data"]
+
 
 EXPOSE 8000
 
