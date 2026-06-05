@@ -1,0 +1,113 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scaler-ai-persona"
+version = "0.1.0"
+description = "AI Persona System ('the brain'): grounded RAG chat + voice + meeting scheduling over a verified corpus (resume + GitHub)."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Scaler AI Labs" }]
+keywords = ["rag", "fastapi", "openai", "chromadb", "persona", "voice", "scheduling"]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Framework :: FastAPI",
+    "Operating System :: OS Independent",
+]
+
+# Runtime dependencies are pinned in requirements.txt (the canonical install source).
+# They are mirrored here so the project is also installable via `pip install .`.
+dependencies = [
+    "fastapi>=0.110,<1.0",
+    "uvicorn[standard]>=0.29,<1.0",
+    "python-multipart>=0.0.9",
+    "pydantic>=2.6,<3.0",
+    "pydantic-settings>=2.2,<3.0",
+    "email-validator>=2.1",
+    "openai>=1.40,<2.0",
+    "sentence-transformers>=3.0",
+    "piper-tts>=1.4,<2.0",
+    "lameenc>=1.7",
+    "chromadb>=0.5,<1.0",
+    "rank-bm25>=0.2.2",
+    "tiktoken>=0.6",
+    "numpy>=1.26",
+    "pypdf>=4.1",
+    "httpx>=0.27",
+    "SQLAlchemy>=2.0,<2.1",
+    "tenacity>=8.2",
+]
+
+[project.optional-dependencies]
+cohere = ["cohere>=5.5"]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "respx>=0.21",
+    "ruff>=0.4",
+    "black>=24.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/scaler-ai-labs/scaler-ai-agent"
+Documentation = "https://github.com/scaler-ai-labs/scaler-ai-agent/blob/main/README.md"
+
+[project.scripts]
+persona-ingest = "app.ingestion.run_ingest:main"
+
+[tool.setuptools.packages.find]
+include = ["app*", "eval*"]
+
+# -----------------------------------------------------------------------------
+# pytest
+# -----------------------------------------------------------------------------
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-ra -q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+# -----------------------------------------------------------------------------
+# black
+# -----------------------------------------------------------------------------
+[tool.black]
+line-length = 100
+target-version = ["py311", "py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.venv
+  | build
+  | dist
+  | data
+)/
+'''
+
+# -----------------------------------------------------------------------------
+# ruff
+# -----------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".venv", "build", "dist", "data"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B", "C4", "SIM"]
+ignore = [
+    "E501",  # line length is enforced by black/formatter, not the linter
+    "B008",  # FastAPI uses callables (Depends/File/Form) in argument defaults
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "eval"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"

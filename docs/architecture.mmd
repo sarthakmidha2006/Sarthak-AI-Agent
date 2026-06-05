@@ -1,0 +1,49 @@
+%% Canonical architecture for the AI Persona System ("brain").
+%% Source of truth: docs/BUILD_SPEC.md §19. Keep this file in sync with the
+%% mermaid block embedded in README.md and docs/architecture.md.
+%%
+%% Render with the Mermaid CLI:
+%%   mmdc -i docs/architecture.mmd -o docs/architecture.svg
+%% or paste into https://mermaid.live
+flowchart TB
+    subgraph Clients
+      C1[Chat client]
+      C2[Voice client]
+    end
+    C1 -->|POST /chat text| API
+    C2 -->|POST /voice audio/text| VOICE[Voice adapter\nSTT / TTS]
+    VOICE -->|text| API
+    subgraph FastAPI[FastAPI app]
+      API[Routes: /chat /voice /availability /book /health]
+      BRAIN[PersonaBrain - shared brain]
+      GUARD[Prompt-injection guard]
+      GROUND[Grounding / hallucination check]
+      API --> BRAIN
+      BRAIN --> GUARD
+      BRAIN --> GROUND
+    end
+    BRAIN -->|retrieve| RAG
+    subgraph RAG[Hybrid RAG]
+      EMB[OpenAI embeddings]
+      VEC[(ChromaDB vector)]
+      BM[BM25 lexical]
+      RRF[RRF fusion]
+      RR[Reranker]
+      EMB --> VEC --> RRF
+      BM --> RRF --> RR
+    end
+    BRAIN -->|tool calls| TOOLS
+    subgraph TOOLS[Tools]
+      AV[check_availability]
+      BK[book_meeting]
+    end
+    TOOLS --> DB[(SQLite\nbookings/logs)]
+    BRAIN -->|chat completion + tools| OAI[OpenAI API]
+    subgraph Ingest[Offline ingestion]
+      R[Resume PDF]
+      GH[GitHub API\nrepos/readmes/commits/source]
+      R --> CH[Chunk]
+      GH --> CH --> EMB
+    end
+    BRAIN --> LOG[(QueryLog: latency / citations / grounding)]
+    LOG --> EVAL[Eval harness:\nprecision/recall/halluc./booking/latency]

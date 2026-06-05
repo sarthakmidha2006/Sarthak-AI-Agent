@@ -1,0 +1,38 @@
+# =============================================================================
+# AI Persona System ("brain") — local / single-host deployment
+# Usage:
+#   cp .env.example .env   # then fill in OPENAI_API_KEY etc.
+#   docker compose up --build
+# Ingest the corpus inside the running container:
+#   docker compose run --rm api python -m app.ingestion.run_ingest --reset
+# =============================================================================
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: scaler-ai-persona:latest
+    container_name: persona-api
+    # Read every configuration value from the local .env file.
+    env_file:
+      - .env
+    environment:
+      # Force the in-container bind address regardless of host .env value.
+      API_HOST: 0.0.0.0
+      API_PORT: "8000"
+    ports:
+      - "8000:8000"
+    # Persist the vector store, BM25 index and SQLite db across restarts.
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s

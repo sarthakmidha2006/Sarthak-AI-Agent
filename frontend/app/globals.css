@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design system (dark by default).
+ * Background #0A0A0A · Cards #111111 · Border #222222
+ * Accent #7C3AED (primary) · Secondary #A855F7
+ * Tokens are expressed as HSL channels so Tailwind's hsl(var(--x)) works.
+ */
+@layer base {
+  :root {
+    --background: 0 0% 4%; /* #0A0A0A */
+    --foreground: 0 0% 96%;
+
+    --card: 0 0% 7%; /* #111111 */
+    --card-foreground: 0 0% 96%;
+
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 262 83% 58%; /* #7C3AED */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 271 91% 65%; /* #A855F7 */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 13%;
+    --muted-foreground: 0 0% 62%;
+
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 13%; /* #222222 */
+    --input: 0 0% 16%;
+    --ring: 262 83% 62%;
+
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+  }
+
+  /* Ambient gradient backdrop for the AI-native feel. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(60rem 60rem at 15% -10%, hsl(262 83% 58% / 0.10), transparent 60%),
+      radial-gradient(50rem 50rem at 100% 0%, hsl(271 91% 65% / 0.08), transparent 55%),
+      radial-gradient(40rem 40rem at 50% 120%, hsl(262 83% 58% / 0.06), transparent 60%);
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply border border-white/[0.06] bg-white/[0.03] backdrop-blur-xl;
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+  /* Custom scrollbars for a polished feel. */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-white/10;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    @apply bg-white/20;
+  }
+}
+
+/* Markdown-ish answer prose without a plugin dependency. */
+.answer-prose p {
+  @apply mb-3 leading-relaxed last:mb-0;
+}
+.answer-prose strong {
+  @apply font-semibold text-foreground;
+}
+.answer-prose ul {
+  @apply mb-3 ml-5 list-disc space-y-1;
+}
+.answer-prose ol {
+  @apply mb-3 ml-5 list-decimal space-y-1;
+}
+.answer-prose code {
+  @apply rounded bg-white/[0.07] px-1.5 py-0.5 text-[0.85em] text-secondary;
+}

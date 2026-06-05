@@ -1,0 +1,51 @@
+# =============================================================================
+# AI Persona System ("brain") — Python 3.11+ dependencies
+# Pins are >= floors known to work together on Python 3.11.
+# Regenerate a fully locked set with `pip freeze` for reproducible deploys.
+# =============================================================================
+
+# --- Web framework & ASGI server ---
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.29,<1.0
+python-multipart>=0.0.9          # multipart/form-data voice audio upload
+
+# --- Configuration & data models ---
+pydantic>=2.6,<3.0
+pydantic-settings>=2.2,<3.0
+email-validator>=2.1             # required by pydantic EmailStr (BookRequest.email)
+
+# --- LLM backend: Groq chat + Groq Whisper STT (OpenAI-compatible API) ---
+# The OpenAI SDK is reused against Groq's base_url; no `groq` package required.
+openai>=1.40,<2.0
+
+# --- Local embeddings (free, offline): BAAI/bge-small-en-v1.5 ---
+sentence-transformers>=3.0       # pulls torch; CPU inference is fine
+
+# --- Local text-to-speech (free, offline) ---
+piper-tts>=1.4,<2.0              # ONNX neural TTS -> 16-bit PCM
+lameenc>=1.7                     # encode Piper PCM to MP3 (keeps /voice contract)
+
+# --- Retrieval / RAG ---
+chromadb>=0.5,<1.0               # PersistentClient vector store
+rank-bm25>=0.2.2                 # lexical retrieval (BM25Okapi)
+tiktoken>=0.6                    # token-aware chunking
+numpy>=1.26                      # vector / scoring math
+
+# --- Ingestion ---
+pypdf>=4.1                       # resume PDF parsing
+httpx>=0.27                      # GitHub REST API (async)
+
+# --- Persistence ---
+SQLAlchemy>=2.0,<2.1             # bookings / logs schema (sync engine + SQLite)
+
+# --- Resilience ---
+tenacity>=8.2                    # retry/backoff on Groq + GitHub calls
+
+# --- Optional: alternative reranker provider ---
+# Used only when RERANKER_PROVIDER=cohere and COHERE_API_KEY is set.
+cohere>=5.5
+
+# --- Dev / test ---
+pytest>=8.0
+pytest-asyncio>=0.23
+respx>=0.21                      # mock httpx (GitHub) in tests
