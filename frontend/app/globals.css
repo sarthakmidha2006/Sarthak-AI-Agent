@@ -88,19 +88,39 @@
   }
 }
 
-/* Markdown-ish answer prose without a plugin dependency. */
+/* Markdown-ish answer prose without a plugin dependency.
+   Tuned for relaxed, document-grade readability (Perplexity / Notion AI feel):
+   generous line-height, clear paragraph rhythm, comfortable list spacing, and a
+   capped measure so long answers stay easy to scan. */
+.answer-prose {
+  @apply max-w-[68ch] leading-[1.75] tracking-[0.002em] text-foreground/90;
+}
 .answer-prose p {
-  @apply mb-3 leading-relaxed last:mb-0;
+  @apply mb-4 leading-[1.75] last:mb-0;
 }
 .answer-prose strong {
   @apply font-semibold text-foreground;
 }
 .answer-prose ul {
-  @apply mb-3 ml-5 list-disc space-y-1;
+  @apply mb-4 ml-1 list-none space-y-2 last:mb-0;
 }
 .answer-prose ol {
-  @apply mb-3 ml-5 list-decimal space-y-1;
+  @apply mb-4 ml-5 list-decimal space-y-2 marker:text-muted-foreground last:mb-0;
+}
+.answer-prose li {
+  @apply leading-[1.7];
+}
+/* Custom bullet so lists read like a polished product, not raw markdown. */
+.answer-prose ul > li {
+  @apply relative pl-5;
+}
+.answer-prose ul > li::before {
+  content: "";
+  @apply absolute left-1 top-[0.72em] h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-primary/50;
 }
 .answer-prose code {
-  @apply rounded bg-white/[0.07] px-1.5 py-0.5 text-[0.85em] text-secondary;
+  @apply rounded-md bg-white/[0.07] px-1.5 py-0.5 text-[0.85em] text-secondary;
+}
+.answer-prose a {
+  @apply text-secondary underline decoration-secondary/30 underline-offset-2 transition-colors hover:decoration-secondary;
 }
