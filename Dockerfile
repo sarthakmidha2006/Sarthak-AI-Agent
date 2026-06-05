@@ -31,6 +31,7 @@ COPY app ./app
 COPY eval ./eval
 COPY scripts ./scripts
 COPY pyproject.toml README.md ./
+COPY data ./data
 
 # --- Persisted data (vector store / bm25 / sqlite) ----------------------------
 # Mount a volume here in docker-compose to keep the corpus across restarts.
