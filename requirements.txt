@@ -19,8 +19,8 @@ email-validator>=2.1             # required by pydantic EmailStr (BookRequest.em
 openai>=1.40,<2.0
 
 # --- Local embeddings (free, offline): BAAI/bge-small-en-v1.5 ---
-sentence-transformers==2.7.0
-torch==2.3.1+cpu    # pulls torch; CPU inference is fine
+# sentence-transformers temporarily disabled
+# torch temporarily disabled pulls torch; CPU inference is fine
 
 # --- Local text-to-speech (free, offline) ---
 piper-tts>=1.4,<2.0              # ONNX neural TTS -> 16-bit PCM
