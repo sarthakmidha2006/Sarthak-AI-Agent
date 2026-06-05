@@ -56,18 +56,14 @@ _RETRYABLE_EXCEPTIONS: tuple[type[BaseException], ...] = (
 
 
 @lru_cache(maxsize=4)
-def _load_sentence_model(model_name: str) -> Any:
-    """Load (and process-cache) a sentence-transformers model by name.
-
-    Cached so multiple :class:`LLMClient` instances (API server, ingestion,
-    eval) share one in-memory copy of the weights. Imported lazily because
-    ``sentence_transformers`` pulls in ``torch`` (heavy at import time).
-    """
-    from sentence_transformers import SentenceTransformer
-
-    logger.info("Loading local embedding model: %s", model_name)
-    return SentenceTransformer(model_name)
-
+def _load_sentence_model(model_name: str):
+    try:
+        from sentence_transformers import SentenceTransformer
+        logger.info("Loading local embedding model: %s", model_name)
+        return SentenceTransformer(model_name)
+    except Exception as e:
+        logger.warning("Embeddings disabled: %s", e)
+        return None
 
 @lru_cache(maxsize=2)
 def _load_piper_voice(model_path: str) -> Any:
