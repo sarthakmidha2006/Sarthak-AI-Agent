@@ -11,9 +11,13 @@ requirements).
 
 from __future__ import annotations
 
+import re
 from typing import Any, Literal
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
+
+# E.164: "+" followed by 8–15 digits, first digit non-zero.
+_E164_RE = re.compile(r"^\+[1-9]\d{7,14}$")
 
 
 class HistoryTurn(BaseModel):
@@ -121,3 +125,34 @@ class BookResponse(BaseModel):
     end_time: str | None = None
     timezone: str | None = None
     alternatives: list[SlotView] | None = None
+
+
+class CallMeRequest(BaseModel):
+    """Request body for ``POST /call-me`` (outbound AI callback)."""
+
+    name: str | None = Field(default=None, max_length=120)
+    phone: str = Field(min_length=8, max_length=20)
+
+    @field_validator("phone")
+    @classmethod
+    def _validate_e164(cls, v: str) -> str:
+        v = v.strip()
+        if not _E164_RE.match(v):
+            raise ValueError("phone must be E.164 formatted, e.g. +919876543210")
+        return v
+
+    @field_validator("name")
+    @classmethod
+    def _clean_name(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        v = v.strip()
+        return v or None
+
+
+class CallMeResponse(BaseModel):
+    """Response body for ``POST /call-me``."""
+
+    success: bool
+    message: str | None = None
+    call_id: str | None = None

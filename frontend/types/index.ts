@@ -102,6 +102,21 @@ export interface BookResponse {
 }
 
 // ----------------------------------------------------------------------------
+// Call Me (outbound AI callback)
+// ----------------------------------------------------------------------------
+/** Payload sent to POST /api/call-me. `phone` is always E.164 (e.g. +919876543210). */
+export interface CallbackRequest {
+  name?: string;
+  phone: string;
+}
+
+/** Normalized result the UI consumes — provider-agnostic. */
+export interface CallbackResult {
+  success: boolean;
+  message?: string;
+}
+
+// ----------------------------------------------------------------------------
 // Health / diagnostics
 // ----------------------------------------------------------------------------
 export interface HealthModels {

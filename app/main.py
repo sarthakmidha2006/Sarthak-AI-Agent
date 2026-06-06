@@ -48,6 +48,7 @@ from app.security.prompt_guard import PromptGuard
 # Route routers
 from app.api.routes import availability as availability_routes
 from app.api.routes import booking as booking_routes
+from app.api.routes import call as call_routes
 from app.api.routes import chat as chat_routes
 from app.api.routes import health as health_routes
 from app.api.routes import vapi as vapi_routes
@@ -248,6 +249,7 @@ def create_app() -> FastAPI:
     app.include_router(booking_routes.router)
     app.include_router(health_routes.router)
     app.include_router(vapi_routes.router)
+    app.include_router(call_routes.router)
 
     return app
 

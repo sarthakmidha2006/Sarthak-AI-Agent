@@ -14,6 +14,7 @@ interface ChatAreaProps {
   onSend: (text: string) => void;
   onStop: () => void;
   onVoice: () => void;
+  onCallMe: () => void;
 }
 
 /** Main conversation surface: transcript (or zero-state) + composer. */
@@ -25,6 +26,7 @@ export function ChatArea({
   onSend,
   onStop,
   onVoice,
+  onCallMe,
 }: ChatAreaProps) {
   const hasMessages = messages.length > 0;
 
@@ -34,7 +36,7 @@ export function ChatArea({
         {hasMessages ? (
           <MessageList messages={messages} />
         ) : (
-          <EmptyState onPick={onSend} disabled={disabled || isSending} />
+          <EmptyState onPick={onSend} onCallMe={onCallMe} disabled={disabled || isSending} />
         )}
       </div>
 

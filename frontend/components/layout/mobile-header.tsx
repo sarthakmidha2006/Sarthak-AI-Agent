@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Settings } from "lucide-react";
+import { Menu, PhoneCall, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { PERSONA } from "@/lib/constants";
@@ -11,6 +11,7 @@ interface MobileHeaderProps {
   status: BackendStatus;
   onOpenSidebar: () => void;
   onOpenSettings: () => void;
+  onOpenCallMe: () => void;
 }
 
 const DOT: Record<BackendStatus, string> = {
@@ -20,7 +21,12 @@ const DOT: Record<BackendStatus, string> = {
 };
 
 /** Top app bar for mobile/tablet — sidebar toggle + identity + settings. */
-export function MobileHeader({ status, onOpenSidebar, onOpenSettings }: MobileHeaderProps) {
+export function MobileHeader({
+  status,
+  onOpenSidebar,
+  onOpenSettings,
+  onOpenCallMe,
+}: MobileHeaderProps) {
   return (
     <header className="flex items-center justify-between border-b border-border bg-background/80 px-3 py-2.5 backdrop-blur-xl md:hidden">
       <Button variant="ghost" size="icon" onClick={onOpenSidebar} aria-label="Open menu">
@@ -35,9 +41,14 @@ export function MobileHeader({ status, onOpenSidebar, onOpenSettings }: MobileHe
         <span className={cn("h-2 w-2 rounded-full", DOT[status])} />
       </div>
 
-      <Button variant="ghost" size="icon" onClick={onOpenSettings} aria-label="Settings">
-        <Settings className="h-5 w-5" />
-      </Button>
+      <div className="flex items-center">
+        <Button variant="ghost" size="icon" onClick={onOpenCallMe} aria-label="Request a call">
+          <PhoneCall className="h-5 w-5" />
+        </Button>
+        <Button variant="ghost" size="icon" onClick={onOpenSettings} aria-label="Settings">
+          <Settings className="h-5 w-5" />
+        </Button>
+      </div>
     </header>
   );
 }

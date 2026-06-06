@@ -181,6 +181,18 @@ class Settings(BaseSettings):
     # can reach. See app.api.routes.vapi.
     vapi_secret: str = ""
 
+    # --- Vapi outbound calling ("Call Me") ---
+    # Used by POST /call-me to place an outbound phone call handled by the
+    # existing assistant. All three are required for outbound calls to work:
+    #   VAPI_API_KEY         — private API key (Vapi dashboard → API Keys)
+    #   VAPI_ASSISTANT_ID    — the "Sarthak ai agent" assistant id
+    #   VAPI_PHONE_NUMBER_ID — id of the (Twilio) number registered in Vapi to
+    #                          call FROM (Vapi dashboard → Phone Numbers)
+    vapi_api_key: str = ""
+    vapi_assistant_id: str = ""
+    vapi_phone_number_id: str = ""
+    vapi_base_url: str = "https://api.vapi.ai"
+
     # --- Brain ---
     chat_temperature: float = 0.2
     max_tool_iterations: int = 4

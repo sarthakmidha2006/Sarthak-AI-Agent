@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageSquarePlus, MessageSquare, Settings, Trash2 } from "lucide-react";
+import { MessageSquarePlus, MessageSquare, PhoneCall, Settings, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProfileCard } from "@/components/profile/profile-card";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ interface SidebarProps {
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
   onOpenSettings: () => void;
+  onOpenCallMe: () => void;
 }
 
 const DOT: Record<BackendStatus, string> = {
@@ -31,6 +32,7 @@ export function Sidebar({
   onSelect,
   onDelete,
   onOpenSettings,
+  onOpenCallMe,
 }: SidebarProps) {
   return (
     <div className="flex h-full flex-col bg-card/40">
@@ -38,6 +40,9 @@ export function Sidebar({
         <ProfileCard />
         <Button onClick={onNewChat} className="w-full">
           <MessageSquarePlus className="h-4 w-4" /> New chat
+        </Button>
+        <Button onClick={onOpenCallMe} variant="outline" className="w-full">
+          <PhoneCall className="h-4 w-4" /> Request a call
         </Button>
       </div>
 

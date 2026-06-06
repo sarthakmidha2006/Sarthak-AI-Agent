@@ -8,6 +8,7 @@ import { Sidebar } from "@/components/sidebar/sidebar";
 import { ChatArea } from "@/components/chat/chat-area";
 import { SettingsPanel } from "@/components/settings/settings-panel";
 import { VoiceModal } from "@/components/voice/voice-modal";
+import { CallMeModal } from "@/components/call-me-modal";
 import { BackendStatusBanner } from "@/components/common/backend-status-banner";
 import { useConversations } from "@/hooks/use-conversations";
 import { useHealth } from "@/hooks/use-health";
@@ -52,6 +53,7 @@ export default function HomePage() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [voiceOpen, setVoiceOpen] = useState(false);
+  const [callMeOpen, setCallMeOpen] = useState(false);
 
   const offline = status === "offline";
 
@@ -98,6 +100,7 @@ export default function HomePage() {
       onSelect={handleSelect}
       onDelete={deleteChat}
       onOpenSettings={() => setSettingsOpen(true)}
+      onOpenCallMe={() => setCallMeOpen(true)}
     />
   );
 
@@ -112,6 +115,7 @@ export default function HomePage() {
           status={status}
           onOpenSidebar={() => setMobileSidebarOpen(true)}
           onOpenSettings={() => setSettingsOpen(true)}
+          onOpenCallMe={() => setCallMeOpen(true)}
         />
         <BackendStatusBanner status={status} onRetry={refresh} />
         <ChatArea
@@ -122,6 +126,7 @@ export default function HomePage() {
           onSend={handleSend}
           onStop={stop}
           onVoice={openVoice}
+          onCallMe={() => setCallMeOpen(true)}
         />
       </AppShell>
 
@@ -147,6 +152,8 @@ export default function HomePage() {
         onStop={voice.stop}
         onReset={voice.reset}
       />
+
+      <CallMeModal open={callMeOpen} onOpenChange={setCallMeOpen} />
     </>
   );
 }
